@@ -1,1 +1,1 @@
-# NHANES-Data-Visualization-Dashboard-with-Google-Trends-Twitter-and-Reddit
+# NHANES Data Visualization Dashboard on Health Disparities and Inequities

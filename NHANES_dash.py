@@ -21,7 +21,7 @@ from pytrends.request import TrendReq
 import tweepy
 import praw
 import datetime
-import config
+#import config
 
 ##################Reddit_AUTH#########################
 # username = config.reddit_username

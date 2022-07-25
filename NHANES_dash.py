@@ -116,7 +116,7 @@ if choose == "About the Project":
     with col2:
         st.markdown(" <h1 style='text-align: center;'> NHANES, Health Disparities Data Visualization Tool</h1>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center;'><i><b>Transformative Research to Address Health Disparities and Advance Health Equity at Minority Serving Institutions</b></i></p>", unsafe_allow_html=True)
-        st.markdown("<center><img src='https://github.com/kkrusere/Market-Basket-Analysis-on-the-Online-Retail-Data/blob/main/Assets/MBA.jpg?raw=1' width=600/></center>", unsafe_allow_html=True)
+        st.markdown("<center><img src='https://github.com/kkrusere/NHANES-Data-Visualization-Dashboard-on-Health-Disparities-and-Inequities/blob/main/assets/health_disparities.jpg' width=600/></center>", unsafe_allow_html=True)
 
     with col3:
         st.write("")

@@ -30,8 +30,8 @@ import config
 # clientsecret = config.reddit_clientsecret
 
 username = st.secrets["reddit_username"]
-password = st.secrets["reddit_reddit_password"]
-clientid = st.secrets["reddit_reddit_clientid"]
+password = st.secrets["reddit_password"]
+clientid = st.secrets["reddit_clientid"]
 clientsecret = st.secrets["reddit_clientsecret"]
 
 #################Twitter_AUTH##########################

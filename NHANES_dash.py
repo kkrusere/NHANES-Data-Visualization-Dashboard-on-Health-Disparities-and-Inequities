@@ -90,7 +90,7 @@ import streamlit.components.v1 as components
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 
-st.set_page_config(page_title="Multipage_App", page_icon="", layout="wide")
+st.set_page_config(page_title="NHANES_Health_Disparities_Dash_App", page_icon="", layout="wide")
 
 
 with st.sidebar:

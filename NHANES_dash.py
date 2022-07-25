@@ -123,7 +123,7 @@ if choose == "About the Project":
 
     col1, col2 = st.columns( [0.8, 0.2])
     with col1:               # To display the header text using css style
-        st.markdown("About the Project:")
+        st.markdown("#### **About the Project:**")
 
         st.markdown("""
                 Design and Development of an MVP (minimum viable product) Data Visualization tool that provides stockholders with the Access and Ability to Track, Monitor and aid Data Driven Decisions with Regards to Health Disparities (and related topics) 

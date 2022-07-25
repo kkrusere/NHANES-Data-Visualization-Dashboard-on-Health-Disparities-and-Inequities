@@ -94,9 +94,9 @@ st.set_page_config(page_title="Multipage_App", page_icon="", layout="wide")
 
 
 with st.sidebar:
-    choose = option_menu("NHANES Health Disparities Dash", ["About the Project", "Google Trends", "NHANES",  "Reddit Conversations", "Twitter Conversations"],
+    choose = option_menu("Dash Menu", ["About the Project", "Google Trends", "NHANES",  "Reddit Conversations", "Twitter Conversations"],
                          icons=['house','google', 'graph-up','reddit', 'twitter'],
-                         menu_icon="bi bi-heart-pulse-fill", default_index=0,
+                         menu_icon="cast", default_index=0,
                          styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "black", "font-size": "25px"}, 
@@ -108,25 +108,34 @@ with st.sidebar:
 
 if choose == "About the Project":
 #Add the cover image for the cover page. Used a little trick to center the image
+    col1, col2, col3 = st.columns((.1,1,.1))
+
+    with col1:
+        st.write("")
+
+    with col2:
+        st.markdown(" <h1 style='text-align: center;'> NHANES, Health Disparities Data Visualization Tool</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center;'><i><b>Transformative Research to Address Health Disparities and Advance Health Equity at Minority Serving Institutions</b></i></p>", unsafe_allow_html=True)
+        st.markdown("<center><img src='https://github.com/kkrusere/Market-Basket-Analysis-on-the-Online-Retail-Data/blob/main/Assets/MBA.jpg?raw=1' width=600/></center>", unsafe_allow_html=True)
+
+    with col3:
+        st.write("")
+
     col1, col2 = st.columns( [0.8, 0.2])
     with col1:               # To display the header text using css style
-        st.markdown(""" <style> .font {
-        font-size:35px ; font-family: 'Cooper Black'; color: black;} 
-        </style> """, unsafe_allow_html=True)
-        st.markdown('<p class="font">About the Project</p>', unsafe_allow_html=True)
+        st.markdown("About the Project:")
 
         st.markdown("""
-                **Kuzi Rusere**\\
-                **Capstone Project Final Paper** \
-
-                **Transformative Research to Address Health Disparities and Advance Health Equity at Minority Serving Institutions:** \\
                 Design and Development of an MVP (minimum viable product) Data Visualization tool that provides stockholders with the Access and Ability to Track, Monitor and aid Data Driven Decisions with Regards to Health Disparities (and related topics) 
-                        \\
-                **Abstract**
- 
-                The subjects of Health disparities and inequities, health outcomes, health insurance, health system, and health equity hardly come up together in public discourse, but the relationships between these subjects cannot be denied, there is no one without the others. To reduce health disparities and inequities you must look at the other three, and the same goes if you want to improve health outcomes, you must look at the other three. The umbrella term that encompasses the different variables which influence the above subjects is “social determinates of health”. This is defined as the factors apart from the actual medical care which determine an individual’s access to healthcare (9,10,16). Often than not, when these subjects surface in public discourse, the conversations are highly politicized and the result is people taking and siding with whatever position that their political base takes without due diligence and some research of their own into the subject matter (6). Furthermore, in this digital information age (riddled with disinformation and misinformation), researching the subject matter is not as easy as you would think. You need to know what you are looking for and you are going to need specialized technical expertise to be able to pore through the data yourself. In this research paper, we investigate health disparities and the related topics. We investigate why these health disparities and inequities exist, and what is being done or what can be done to reduce these inequities. We then introduce a centralized, interactive, and responsive data visualization tool that allows the users to visualize data from the NIH’s NHANES (National Health and Nutrition Examination Survey) data (particular the Demographic and Questionnaire data which does look into the Social determinants of Health factors), keyword search trend demand visualization of the subject matter from Google Trends, and lastly access to and sentiment analysis of conversation of the subject matter on social platforms Twitter and Reddit. The objective of this is to shed light on the subject matter and provide tracking and monitoring capabilities to the general public and public health stakeholders, without the need for specialized technical expertise and resources. This in turn would aid them in making data driven decisions.
+                
+                ##### **Abstract**
 
+                The subjects of Health disparities and inequities, health outcomes, health insurance, health system, and health equity hardly come up together in public discourse, but the relationships between these subjects cannot be denied, there is no one without the others. To reduce health disparities and inequities you must look at the other three, and the same goes if you want to improve health outcomes, you must look at the other three. The umbrella term that encompasses the different variables which influence the above subjects is “social determinates of health”. This is defined as the factors apart from the actual medical care which determine an individual’s access to healthcare (9,10,16). Often than not, when these subjects surface in public discourse, the conversations are highly politicized and the result is people taking and siding with whatever position that their political base takes without due diligence and some research of their own into the subject matter (6). Furthermore, in this digital information age (riddled with disinformation and misinformation), researching the subject matter is not as easy as you would think. You need to know what you are looking for and you are going to need specialized technical expertise to be able to pore through the data yourself. In this research paper, we investigate health disparities and the related topics. We investigate why these health disparities and inequities exist, and what is being done or what can be done to reduce these inequities. We then introduce a centralized, interactive, and responsive data visualization tool that allows the users to visualize data from the NIH’s NHANES (National Health and Nutrition Examination Survey) data (particular the Demographic and Questionnaire data which does look into the Social determinants of Health factors), keyword search trend demand visualization of the subject matter from Google Trends, and lastly access to and sentiment analysis of conversation of the subject matter on social platforms Twitter and Reddit. The objective of this is to shed light on the subject matter and provide tracking and monitoring capabilities to the general public and public health stakeholders, without the need for specialized technical expertise and resources. This in turn would aid them in making data driven decisions.
+                
         """)
+
+        st.markdown("##### ***Project Contributors:***")
+        st.markdown("Kuzi Rusere")
         
 
 elif choose == "Google Trends":

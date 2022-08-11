@@ -450,7 +450,6 @@ elif choose == "NHANES":
                                     'Alcohol Use',
                                     'Alcohol Use (Ages 18-19)',
                                     'Alcohol Use - Youth',
-                                    'Allergy',
                                     'Analgesic Pain Relievers',
                                     'Audiometry',
                                     'Blood Pressure & Cholesterol',

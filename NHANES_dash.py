@@ -446,12 +446,80 @@ elif choose == "NHANES":
                     '2015-2016',
                     '2017-2018']
 
+    questionnaire_data_file_list = ['Air Quality',
+                                    'Alcohol Use',
+                                    'Alcohol Use (Ages 18-19)',
+                                    'Alcohol Use - Youth',
+                                    'Allergy',
+                                    'Analgesic Pain Relievers',
+                                    'Audiometry',
+                                    'Blood Pressure & Cholesterol',
+                                    'Cardiovascular Health',
+                                    'Cognitive Functioning',
+                                    'Consumer Behavior',
+                                    'Consumer Behavior Phone Follow-up Module - Adult',
+                                    'Consumer Behavior Phone Follow-up Module - Child',
+                                    'Current Health Status',
+                                    'Dermatology',
+                                    'Diabetes',
+                                    'Diet Behavior & Nutrition',
+                                    'Disability',
+                                    'Drug Use',
+                                    'Drug Use - Youth',
+                                    'Early Childhood',
+                                    'Food Security',
+                                    'Food Security - Pregnant Women',
+                                    'Health Insurance',
+                                    'Hospital Utilization & Access to Care',
+                                    'Housing Characteristics',
+                                    'Immunization',
+                                    'Income',
+                                    'Kidney Conditions',
+                                    'Kidney Conditions - Urology',
+                                    'Medical Conditions',
+                                    'Mental Health - Conduct Disorder - Youth',
+                                    'Mental Health - Depression',
+                                    'Mental Health - Depression Screener',
+                                    'Mental Health - Depression Screener - Youth',
+                                    'Mental Health - Generalized Anxiety Disorder',
+                                    'Mental Health - Panic Disorder',
+                                    'Miscellaneous Pain',
+                                    'Occupation',
+                                    'Oral Health',
+                                    'Physical Activity',
+                                    'Physical Activity - Individual Activities',
+                                    'Physical Activity - Youth',
+                                    'Physical Functioning',
+                                    'Prescription Medications',
+                                    'Prostate Conditions',
+                                    'Reproductive Health',
+                                    'Reproductive Health - Pregnant Women',
+                                    'Reproductive Health - Women 12 Years and Older',
+                                    'Respiratory Health',
+                                    'Sexual Behavior',
+                                    'Sexual Behavior - Youth',
+                                    'Sleep Disorders',
+                                    'Smoking - Adult Recent Tobacco Use & Youth Cigarette/Tobacco Use',
+                                    'Smoking - Cigarette Use',
+                                    'Smoking - Cigarette/Tobacco Use - Adult',
+                                    'Smoking - Household Smokers',
+                                    'Smoking - Recent Tobacco Use',
+                                    'Social Support',
+                                    'Tuberculosis',
+                                    'Vision',
+                                    'Weight History',
+                                    'Weight History - Youth']
+
+
+
     demographics_url = "https://wwwn.cdc.gov/nchs/nhanes/search/variablelist.aspx?Component=demographics"
 
 
     questionnaire_url = "https://wwwn.cdc.gov/nchs/nhanes/search/variablelist.aspx?Component=questionnaire"
 
-
+    option = st.selectbox(
+                        'Please Select the Data Categories that you would like to Explore with respect to Health Disparities, Inequities, and Social Determinants of Health  ',
+                        questionnaire_data_file_list)
 ################################################################********************Reddit Conversations***********************########################################################
 
 elif choose == "Reddit Conversations":

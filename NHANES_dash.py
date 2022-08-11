@@ -425,7 +425,7 @@ elif choose == "Google Trends":
     ######################################################################
 
 
-
+#######################################################**************************NHANES*****************************####################################################################
 
 elif choose == "NHANES":
     #Add a file uploader to allow users to upload their project plan file
@@ -433,231 +433,26 @@ elif choose == "NHANES":
     font-size:35px ; font-family: 'Cooper Black'; color: black;} 
     </style> """, unsafe_allow_html=True)
     st.markdown('<p class="font">NHANES</p>', unsafe_allow_html=True)
-    st.write("this is the NHANES")
+    st.write("NHANES")
     #creating a list of the survey cycles that we are going to be collecting the data
-    cycle_list = list()
-    a = 1999
-    b = 2000
-    for i in range(10):
-        cycle_list.append(f"{a}-{b}")
-        a = b + 1
-        b = b + 2
-    #Demography variable URL from the NHANES
+    cycle_list = [  '1999-2000',
+                    '2001-2002',
+                    '2003-2004',
+                    '2005-2006',
+                    '2007-2008',
+                    '2009-2010',
+                    '2011-2012',
+                    '2013-2014',
+                    '2015-2016',
+                    '2017-2018']
+
     demographics_url = "https://wwwn.cdc.gov/nchs/nhanes/search/variablelist.aspx?Component=demographics"
-
-    def get_variable_df(url, cycle_list = cycle_list):
-        """
-        This fuction inputs the NHANES URL for Variable list 
-        The Pandas' pandas.read_html() fuction is used to read tables on the URL
-        Resulting data frame is then cleaned (adding a year column and removing some other columns not needed)
-        Year column matches the survey cycle periods
-        Cycle list is used to filter the data to just the cycle of interest 
-        Returns the data frame of the variable  
-        """
-        dfs = pd.read_html(url)
-        df = dfs[0] #the table of interest in on the index 0
-
-        Years = [i for i in  range(len(df))]
-        df["Years"] = Years 
-        for i in range(len(df)):
-            x = df['Begin Year'][i]
-            y = df['EndYear'][i]
-            df["Years"][i] = f"{x}-{y}"
-        df.drop(["Begin Year", "EndYear", "Component","Use Constraints"], axis=1, inplace=True)
-        df = df.loc[df["Years"].isin(cycle_list)]
-        df.reset_index(drop=True, inplace=True)
-
-        return df
-
-    def check_variable(data_frame):
-        """
-        This fuction look at the variables if they are in all cycles or not 
-        If the variable is present in all 10 cycles append it to a list for later use
-        """
-        variable_list = list()
-        new_list = list((dict(data_frame['Variable Name'].value_counts())).keys())
-        for i in range(len(new_list)):
-            temp = data_frame[data_frame["Variable Name"] == f"{new_list[i]}"]
-            temp = temp.reset_index(drop=True)
-            if temp.shape[0] > 5:#the variable has to be in all the years that we are looking at
-                variable_list.append(new_list[i])
-        
-        
-        return variable_list
-
-
-
-    #we call the get_variable_df fuction for the demography URL
-    demographics_var_df = get_variable_df(demographics_url)
-
-    #so we check the variable in the demography dataframe 
-    variable_list = check_variable(demographics_var_df)
-
-    #we are going to remove the below variable from the variable list as they are of no use here
-    variable_list = [ele for ele in variable_list if ele not in ["RIDEXMON", "WTINT2YR", "SDMVSTRA", "RIDSTATR", "WTMEC2YR"]]
-
-    #we use the variable list to filter the demography variable dataframe
-    demographics_var_df =  demographics_var_df.loc[demographics_var_df["Variable Name"].isin(variable_list)]
-    demographics_var_df.reset_index(drop=True, inplace=True)
-
-
-
-    def get_variable_documentation(data_File_Name, cycle = cycle_list[0], variable_list = variable_list):
-        """
-        This fuction goes to the  NHANES Data Documentation for the input data_file_name with the help of BeautifulSoup
-        Three dictionaries are created for the code table, sas label and the english text (variable explanation)
-        The fuction then returns the dictionaries. 
-        """
-        url = f"https://wwwn.cdc.gov/Nchs/Nhanes/{cycle}/{data_File_Name}.htm"
-        varibale_code_table = dict()
-        variable_sas_label = dict()
-        variable_English_Text = dict()
-        
-        req=requests.get(url)
-        content=req.text
-        soup = BeautifulSoup(content)
-
-        mydivs = soup.find_all("div", {"class": "pagebreak"})
-        for i, div in enumerate(mydivs):
-            x = div.find_all_next()
-            variable = x[0]["id"]
-            if variable in variable_list:
-                #print(variable)
-                #print(f"{x[2].text}{x[3].text}")
-                variable_sas_label[variable] = x[5].text
-                #print(f"{x[4].text}{x[5].text}")
-                variable_English_Text[variable] = {x[7].text}
-                #print(f"{x[6].text}{x[7].text}")
-                if div.find("table") is not None:
-                    table = pd.read_html(str(div.find('table')))[0]
-                    varibale_code_table[variable] = table
-                    #print(data_frame[i-1])
-            #print("#####################")
-
-        return varibale_code_table, variable_sas_label, variable_English_Text
-
-
-    #code we will call the get_variable_documentation fuction 
-    demography_varibale_code_table, demography_variable_sas_label, demography_variable_English_Text = get_variable_documentation("DEMO")
-
 
 
     questionnaire_url = "https://wwwn.cdc.gov/nchs/nhanes/search/variablelist.aspx?Component=questionnaire"
-    questionnaire_var_df = get_variable_df(questionnaire_url)
-    questionnaire_var_df.drop(questionnaire_var_df[questionnaire_var_df['Data File Name'] == "OCQ_H_R"].index, inplace = True)
-    questionnaire_var_df.reset_index(drop=True, inplace=True)
 
 
-    questionnaire_data_file_list = list()
-    for string_key in list(questionnaire_var_df["Data File Description"].unique()):
-        if string_key not in ["Dermatology",
-                                'Blood Pressure & Cholesterol',
-                                'Diet Behavior & Nutrition',
-                                'Immunization',
-                                'Kidney Conditions - Urology',
-                                'Oral Health',
-                                'Physical Functioning',
-                                'Pesticide Use',
-                                'Smoking - Household Smokers',
-                                'Weight History',
-                                'Respiratory Health',
-                                'Sexual Behavior',
-                                'Diabetes',
-                                'Drug Use',
-                                'Reproductive Health',
-                                'Consumer Behavior',
-                                'Food Security',
-                                "Sexual Behavior - Youth", 
-                                "Acculturation", 
-                                "Alcohol Use",
-                                "Audiometry", 
-                                "Prescription Medications",
-                                "Cardiovascular Health", 
-                                "Early Childhood"]:
-            a = len(questionnaire_var_df[questionnaire_var_df["Data File Description"] == string_key]["Years"].value_counts())
-            if a >=9 or string_key in ["Respiratory Health","Consumer Behavior","Income"]:
-                questionnaire_data_file_list.append(string_key)
-
-
-    #Now that we have this data file list, we can go through it file name by file name selecting the variable that of more interest to this project 
-    def return_temp_df(data_File_Name):
-        """
-        This fuction filters the questionnaire_var_df using the input data file name and returns the resulting dataframe
-        """
-        print(f"The data frame is for {data_File_Name}")
-        df = questionnaire_var_df[questionnaire_var_df["Data File Description"] == data_File_Name]
-        df.reset_index(drop= True, inplace=True)
-        return df
-
-    variable_documentation_dict = dict() #the keys will be the Data Category names
-    #so we will add the Demography variable information first
-    variable_documentation_dict["Demography"] = [variable_list, demography_variable_sas_label,demography_variable_English_Text,demography_varibale_code_table]
-
-
-    for i, the_name in enumerate(questionnaire_data_file_list):
-        df = return_temp_df(the_name)
-        q_variable_list = check_variable(df)
-        x,y,z = get_variable_documentation(df["Data File Name"][0], cycle=df["Years"][0], variable_list = q_variable_list)
-        variable_documentation_dict[f"{the_name}"] = [q_variable_list, y,z,x]
-
-
-    merged_df = pd.read_csv("merged_data.csv")
-
-    col1, col2 = st.columns(2)
-    with col1:
-        def value_mapper(x):
-            df = variable_documentation_dict['Demography'][3]["RIAGENDR"]
-            i = df[df['Code or Value'] == str(x)].index[0]
-            return df['Value Description'][i]
-        tempdf = pd.DataFrame(merged_df["Gender"].value_counts())
-        tempdf.reset_index(inplace= True)
-        tempdf.columns = ["Gender", "Count"]
-        tempdf['Gender'] = tempdf['Gender'].astype(int)
-        tempdf['Gender'] = tempdf['Gender'].astype(str)
-        tempdf['Gender'] = tempdf['Gender'].apply(value_mapper)
-        fig = px.pie(tempdf, values='Count', names='Gender')
-        st.plotly_chart(fig)
-    with col2:
-        #we will create a helper fuction 
-        def value_mapper(x):
-            df = variable_documentation_dict['Health Insurance'][3]["HIQ011"]
-            i = df[df['Code or Value'] == str(x)].index[0]
-            return df['Value Description'][i]
-        
-
-
-        tempdf = pd.DataFrame(merged_df["Covered by health insurance"].value_counts())
-        tempdf.reset_index(inplace= True)
-        tempdf.columns = ["Covered by health insurance", "Count"]
-        tempdf['Covered by health insurance'] = tempdf['Covered by health insurance'].astype(int)
-        tempdf['Covered by health insurance'] = tempdf['Covered by health insurance'].astype(str)
-        tempdf['Covered by health insurance'] = tempdf['Covered by health insurance'].apply(value_mapper)
-        fig = px.bar(tempdf, x="Covered by health insurance", y="Count")
-        st.plotly_chart(fig)
-
-
-    col1, col2 = st.columns(2)
-    with col1:
-        #we will create a helper fuction 
-        def value_mapper(x):
-            df = variable_documentation_dict['Hospital Utilization & Access to Care'][3]["HUQ030"]
-            i = df[df['Code or Value'] == str(x)].index[0]
-            return df['Value Description'][i]
-            
-
-
-        tempdf = pd.DataFrame(merged_df["Routine place to go for healthcare"].value_counts())
-        tempdf.reset_index(inplace= True)
-        tempdf.columns = ["Routine place to go for healthcare", "Count"]
-        tempdf['Routine place to go for healthcare'] = tempdf['Routine place to go for healthcare'].astype(int)
-        tempdf['Routine place to go for healthcare'] = tempdf['Routine place to go for healthcare'].astype(str)
-        tempdf['Routine place to go for healthcare'] = tempdf['Routine place to go for healthcare'].apply(value_mapper)
-        fig = px.bar(tempdf, x="Routine place to go for healthcare", y="Count")
-        st.plotly_chart(fig)
-
-    with col2:
-        pass
-##################################################################################################
+################################################################********************Reddit Conversations***********************########################################################
 
 elif choose == "Reddit Conversations":
     st.markdown(""" <style> .font {
@@ -876,7 +671,7 @@ elif choose == "Reddit Conversations":
     next = st.button('Back to Health Disparities')
 
 
-##############################################################################
+#######################################################***********************Twitter Conversations********************###############################################################
 
 
 elif choose == "Twitter Conversations":

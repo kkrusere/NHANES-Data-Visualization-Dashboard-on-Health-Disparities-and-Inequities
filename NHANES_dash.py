@@ -517,7 +517,7 @@ elif choose == "NHANES":
 
     questionnaire_url = "https://wwwn.cdc.gov/nchs/nhanes/search/variablelist.aspx?Component=questionnaire"
 
-    option = st.selectbox(
+    option = st.multiselect(
                         'Please Select the Data Categories that you would like to Explore with respect to Health Disparities, Inequities, and Social Determinants of Health  ',
                         questionnaire_data_file_list)
 ################################################################********************Reddit Conversations***********************########################################################

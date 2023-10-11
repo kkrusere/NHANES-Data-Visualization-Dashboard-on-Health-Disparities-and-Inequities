@@ -1,4 +1,14 @@
 import pandas as pd
+cycle_list = [  '1999-2000',
+                '2001-2002',
+                '2003-2004',
+                '2005-2006',
+                '2007-2008',
+                '2009-2010',
+                '2011-2012',
+                '2013-2014',
+                '2015-2016',
+                '2017-2018']
 
 class NHANESDataAPI:
     def __init__(self, data_category, data_dir="data/"):
@@ -23,7 +33,19 @@ class NHANESDataAPI:
         pd.DataFrame: A pandas DataFrame containing the variable table.
         """
         url = f"https://wwwn.cdc.gov/nchs/nhanes/search/variablelist.aspx?Component={data_category}"
-        return pd.read_html(url)[0]  # Assuming the table is the first one on the page
+        df = pd.read_html(url)[0]  # Assuming the table is the first one on the page
+
+        Years = [i for i in  range(len(df))]
+        df["Years"] = Years 
+        for i in range(len(df)):
+            x = df['Begin Year'][i]
+            y = df['EndYear'][i]
+            df["Years"][i] = f"{x}-{y}"
+        df.drop(["Begin Year", "EndYear", "Component","Use Constraints"], axis=1, inplace=True)
+        df = df.loc[df["Years"].isin(cycle_list)]
+        df.reset_index(drop=True, inplace=True)
+        
+        return df
 
     
     def list_data_file_descriptions(self):
@@ -131,7 +153,7 @@ class NHANESDataAPI:
         Returns:
         list: List of valid cycle(s) based on input.
         """
-        cycle_list = [row['Years'] for row in self.variable_table]
+        #cycle_list = [row['Years'] for row in self.variable_table]
         if input_cycle in cycle_list:
             return [input_cycle]
         else:

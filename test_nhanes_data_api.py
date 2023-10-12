@@ -6,7 +6,7 @@ from NHANES_data_API import NHANESDataAPI
 class TestNHANESDataAPI(unittest.TestCase):
     def setUp(self):
         # Initialize the NHANESDataAPI object for testing
-        self.api = NHANESDataAPI(data_category='demographic')  # Replace with the correct data category
+        self.api = NHANESDataAPI(data_category='demographics')  # Replace with the correct data category
 
     def test_list_data_file_descriptions(self):
         # Test the list_data_file_descriptions method
@@ -34,7 +34,7 @@ class TestNHANESDataAPI(unittest.TestCase):
 
     def test_get_data(self):
         # Test the get_data method
-        data = self.api.get_data(cycle_year='2009-2010', data_category="Demographics", data_file_description='Demographic Variables & Sample Weights')
+        data = self.api.get_data(cycle_year='2009-2010', data_category="demographics", data_file_description='Demographic Variables & Sample Weights')
         self.assertIsInstance(data, pd.DataFrame)
         # Add more specific test cases based on your implementation
 

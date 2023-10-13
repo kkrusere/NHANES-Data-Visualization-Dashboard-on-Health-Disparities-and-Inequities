@@ -36,10 +36,12 @@ class TestNHANESDataAPI(unittest.TestCase):
 
     def test_common_variables(self):
         # Test the common_variables method
-        common_vars, var_cycles = self.api.common_variables(cycle_years=['1999-2000', '2001-2002'])
+        common_vars, uncommon_vars, var_cycles = self.api.common_variables(cycle_years=['1999-2000', '2001-2002'])
         self.assertIsInstance(common_vars, list)
+        self.assertIsInstance(uncommon_vars, list)
         self.assertIsInstance(var_cycles, dict)
         self.assertTrue(len(common_vars) > 0)
+        self.assertTrue(len(uncommon_vars) >= 0)  # uncommon_vars can be an empty list
         self.assertTrue(len(var_cycles) > 0)
 
     def test_check_cycle(self):
@@ -51,6 +53,14 @@ class TestNHANESDataAPI(unittest.TestCase):
         self.assertIsInstance(invalid_cycles, list)
         self.assertEqual(len(invalid_cycles), 0)
 
+    def test_get_data_valid(self):
+        # Test when requesting valid data
+        cycle_year = '1999-2000'
+        data_category = 'demographics'
+        data_file_description = 'Demographic Variables & Sample Weights'
+        df = self.api.get_data(cycle_year, data_category, data_file_description)
+        self.assertIsInstance(df, pd.DataFrame)
+        self.assertTrue(len(df) > 0)
 
  
 

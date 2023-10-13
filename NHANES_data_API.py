@@ -20,23 +20,22 @@ data_cat_list = [
             ]
 
 class NHANESDataAPI:
-    def __init__(self, data_category, data_dir="data/"):
+    def __init__(self, data_category, data_directory="data/"):
         """
         Initialize the NHANES Data API.
 
         Args:
         data_category (str): The data category for which to retrieve the variable table.
-        data_dir (str): Directory where data will be stored.
+        data_directory (str): Directory where data will be stored.
         """
-        self.data_dir = data_dir
+        self.data_directory = data_directory
 
         # Check if the provided data category is valid
         if not self.is_valid_data_category(data_category):
-            print("You have enter an Invalid data category!!!")
+            print("You have entered an Invalid data category!!!")
             print(f"Valid Data Categories: {data_cat_list}")
 
             raise ValueError(f"Invalid data category: {data_category}")
-            
 
         self.variable_table = self._get_variable_table(data_category)
         self.data_file_names = self.resolve_data_file_names()
@@ -173,30 +172,47 @@ class NHANESDataAPI:
         Find common variables across multiple cycle years and create a dictionary with variable-cycles mapping.
 
         Args:
-        cycle_years (list of str): List of cycle years.
+        cycle_years (str or list of str): Either a single cycle year or a list of cycle years.
 
         Returns:
         list: List of common variables.
+        list: List of uncommon variables.
         dict: A dictionary of {variable: [cycles]}.
         """
+        if isinstance(cycle_years, str):
+            cycle_years = [cycle_years]
+
         common_variables = None
         variable_cycles_dict = {}
 
+        valid_cycles = list()
         for cycle in cycle_years:
-            variables = [row['Variable Name'] for index, row in self.variable_table.iterrows() if row['Years'] == cycle]
-            if common_variables is None:
-                common_variables = set(variables)
-            else:
-                common_variables.intersection_update(variables)
+            valid_cycles = valid_cycles + self.check_cycle(cycle)
 
-            for variable in variables:
-                if variable in variable_cycles_dict:
-                    variable_cycles_dict[variable].append(cycle)
+            if valid_cycles == []:
+                print("You have entered an Invalid cycle!!!!!!")
+                print(f"Below is a list of valid cycles: \n {cycle_list}")
+
+            for valid_cycle in valid_cycles:
+                variables = [row['Variable Name'] for index, row in self.variable_table.iterrows() if row['Years'] == valid_cycle]
+
+                if common_variables is None:
+                    common_variables = set(variables)
                 else:
-                    variable_cycles_dict[variable] = [cycle]
+                    common_variables.intersection_update(variables)
+
+                for variable in variables:
+                    if variable in variable_cycles_dict:
+                        variable_cycles_dict[variable].append(valid_cycle)
+                    else:
+                        variable_cycles_dict[variable] = [valid_cycle]
 
         common_variables = list(common_variables)
-        return common_variables, variable_cycles_dict
+        all_variables = set(self.variable_table['Variable Name'])
+        uncommon_variables = list(all_variables.difference(common_variables))
+
+        return common_variables, uncommon_variables, variable_cycles_dict
+
     
     def check_cycle(self, input_cycle):
         """
@@ -214,6 +230,8 @@ class NHANESDataAPI:
             return the_cyclelist
         elif input_cycle in cycle_list:
             return [input_cycle]
+        elif any(input_cycle in cycles for cycles in cycle_list):
+            return [cycle for cycle in cycle_list if input_cycle in cycle]
         else:
             return []
 
@@ -239,6 +257,7 @@ class NHANESDataAPI:
             if end_year in cycle:
                 return list_of_cycles_to_be_worked_on
         return list_of_cycles_to_be_worked_on
+
 
 
 

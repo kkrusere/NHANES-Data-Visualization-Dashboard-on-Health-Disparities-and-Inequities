@@ -1,5 +1,6 @@
 import pandas as pd
-cycle_list = [  '1999-2000',
+cycle_list = [  
+                '1999-2000',
                 '2001-2002',
                 '2003-2004',
                 '2005-2006',
@@ -9,6 +10,14 @@ cycle_list = [  '1999-2000',
                 '2013-2014',
                 '2015-2016',
                 '2017-2018']
+data_cat_list = [
+                "demographics",
+                "dietary", 
+                "examination", 
+                "laboratory", 
+                "questionnaire", 
+                "limitedaccess"
+            ]
 
 class NHANESDataAPI:
     def __init__(self, data_category, data_dir="data/"):
@@ -20,9 +29,54 @@ class NHANESDataAPI:
         data_dir (str): Directory where data will be stored.
         """
         self.data_dir = data_dir
-        self.variable_table = self.get_variable_table(data_category)
 
-    def get_variable_table(self, data_category):
+        # Check if the provided data category is valid
+        if not self.is_valid_data_category(data_category):
+            print("You have enter an Invalid data category!!!")
+            print(f"Valid Data Categories: {data_cat_list}")
+
+            raise ValueError(f"Invalid data category: {data_category}")
+            
+
+        self.variable_table = self._get_variable_table(data_category)
+        self.data_file_names = self.resolve_data_file_names()
+        #self.list_data_file_descriptions_for_data = self.list_data_file_descriptions()
+        
+
+
+
+    def is_valid_data_category(self, data_category):
+        """
+        Check if the provided data category is valid.
+
+        Args:
+        data_category (str): The data category to check.
+
+        Returns:
+        bool: True if the data category is valid, False otherwise.
+        """
+        valid_data_categories = data_cat_list  
+        return data_category in valid_data_categories
+
+
+
+    def resolve_data_file_names(self):
+        """
+        Resolve data file names for all available cycles during initialization.
+
+        Returns:
+        dict: A dictionary mapping (cycle_year, data_file_description) to data_file_name.
+        """
+        data_file_names = {}
+
+        for cycle_year in cycle_list:
+            for data_file_description in self.list_data_file_descriptions():
+                data_file_name = self.get_data_filename(cycle_year, data_file_description)
+                data_file_names[(cycle_year, data_file_description)] = data_file_name
+
+        return data_file_names
+
+    def _get_variable_table(self, data_category):
         """
         Retrieve the variable table for a specific data category.
 
@@ -35,16 +89,11 @@ class NHANESDataAPI:
         url = f"https://wwwn.cdc.gov/nchs/nhanes/search/variablelist.aspx?Component={data_category}"
         df = pd.read_html(url)[0]  # Assuming the table is the first one on the page
 
-        Years = [i for i in  range(len(df))]
-        df["Years"] = Years 
-        for i in range(len(df)):
-            x = df['Begin Year'][i]
-            y = df['EndYear'][i]
-            df["Years"][i] = f"{x}-{y}"
-        df.drop(["Begin Year", "EndYear", "Component","Use Constraints"], axis=1, inplace=True)
+        df["Years"] = df.apply(lambda row: f"{row['Begin Year']}-{row['EndYear']}", axis=1)
+        df.drop(["Begin Year", "EndYear", "Component", "Use Constraints"], axis=1, inplace=True)
         df = df.loc[df["Years"].isin(cycle_list)]
         df.reset_index(drop=True, inplace=True)
-        
+
         return df
 
     
@@ -71,10 +120,11 @@ class NHANESDataAPI:
         dict: A dictionary of {Variable Name: Variable Description}.
         """
         variable_dict = {}
-        for row in self.variable_table:
-            if row['Years'] == cycle_year and row['Data File Description'] == data_file_description:
-                variable_dict[row['Variable Name']] = row['Variable Description']
+        for i in range(len(self.variable_table)):
+            if self.variable_table['Years'][i] == cycle_year and self.variable_table['Data File Description'][i] == data_file_description:
+                variable_dict[self.variable_table['Variable Name'][i]] = self.variable_table['Variable Description'][i]
         return variable_dict
+
 
     def list_data_files(self):
         """
@@ -84,7 +134,7 @@ class NHANESDataAPI:
         dict: A dictionary of {Data File Description: {Data File Name: [cycle_years]}}.
         """
         data_file_dict = {}
-        for row in self.variable_table:
+        for index, row in self.variable_table.iterrows():
             data_file_desc = row['Data File Description']
             data_file_name = row['Data File Name']
             cycle_year = row['Years']
@@ -108,9 +158,14 @@ class NHANESDataAPI:
         Returns:
         str: The data file name.
         """
-        for row in self.variable_table:
-            if row['Years'] == cycle_year and row['Data File Description'] == data_file_description:
-                return row['Data File Name']
+        # for row in self.variable_table:
+        #     if row['Years'] == cycle_year and row['Data File Description'] == data_file_description:
+        #         return row['Data File Name']
+
+        for i in range(len(self.variable_table)):
+            if self.variable_table['Years'][i] == cycle_year and self.variable_table['Data File Description'][i] == data_file_description:
+                return self.variable_table['Data File Name'][i]
+            
         return None
 
     def common_variables(self, cycle_years):
@@ -128,7 +183,7 @@ class NHANESDataAPI:
         variable_cycles_dict = {}
 
         for cycle in cycle_years:
-            variables = [row['Variable Name'] for row in self.variable_table if row['Years'] == cycle]
+            variables = [row['Variable Name'] for index, row in self.variable_table.iterrows() if row['Years'] == cycle]
             if common_variables is None:
                 common_variables = set(variables)
             else:
@@ -142,7 +197,7 @@ class NHANESDataAPI:
 
         common_variables = list(common_variables)
         return common_variables, variable_cycles_dict
-
+    
     def check_cycle(self, input_cycle):
         """
         Check the validity of a cycle and return valid cycle(s) based on input.
@@ -153,14 +208,14 @@ class NHANESDataAPI:
         Returns:
         list: List of valid cycle(s) based on input.
         """
-        #cycle_list = [row['Years'] for row in self.variable_table]
-        if input_cycle in cycle_list:
-            return [input_cycle]
-        else:
-            start_year = input_cycle.split('-')[0]
-            end_year = input_cycle.split('-')[1]
+        if '-' in input_cycle:
+            start_year, end_year = input_cycle.split('-')
             the_cyclelist = self.check_in_between_cycle(start_year, end_year, cycle_list)
             return the_cyclelist
+        elif input_cycle in cycle_list:
+            return [input_cycle]
+        else:
+            return []
 
     def check_in_between_cycle(self, start_year, end_year, cycle_list):
         """
@@ -174,7 +229,7 @@ class NHANESDataAPI:
         Returns:
         list: List of valid cycle(s) within the range.
         """
-        list_of_cycles_to_be_worked_on = list()
+        list_of_cycles_to_be_worked_on = []
         flager = 0
         for cycle in cycle_list:
             if start_year in cycle:
@@ -183,6 +238,9 @@ class NHANESDataAPI:
                 list_of_cycles_to_be_worked_on.append(cycle)
             if end_year in cycle:
                 return list_of_cycles_to_be_worked_on
+        return list_of_cycles_to_be_worked_on
+
+
 
 
     def get_data(self, cycle_year, data_category, data_file_description, include_uncommon=False):
@@ -201,8 +259,13 @@ class NHANESDataAPI:
         list_of_cycles = self.check_cycle(cycle_year)
 
         if len(list_of_cycles) == 1:
-            data_file_name = self.get_data_filename(cycle_year, data_file_description)
-            return pd.read_sas(f"https://wwwn.cdc.gov/Nchs/Nhanes/{cycle_year}/{data_file_name}")
+            data_file_name = self.data_file_names.get((cycle_year, data_file_description))
+            if data_file_name is not None:
+                return pd.read_sas(f"https://wwwn.cdc.gov/Nchs/Nhanes/{cycle_year}/{data_file_name}")
+            else:
+                # Handle the case where data_file_name is not found
+                print(f"Data file name not found for {cycle_year} and {data_file_description}.")
+                return None
 
         else:
             # Initialize an empty DataFrame

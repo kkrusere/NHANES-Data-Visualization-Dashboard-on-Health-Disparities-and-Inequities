@@ -4,7 +4,7 @@
 
 <center><img src='https://github.com/kkrusere/NHANES-EDA-on-Health-Disparities-and-Inequities/blob/main/assets/nhanes_health_disparities.png?raw=true' width=600/></center>
 
-**Introduction:**
+### **Introduction:**
 
 In a world where healthcare plays a pivotal role in societal well-being, achieving equitable health outcomes remains a persistent challenge. Effective healthcare is intertwined with the quest to bridge health disparities, which manifest as varying health outcomes among different demographic groups. These disparities are intricately linked to the social determinants of health, the multifaceted societal factors that shape well-being. This project utilizes data to unravel the complex connections between these vital elements.
 
@@ -24,15 +24,15 @@ Our lens into this intricate landscape is the NHANES dataset. Through meticulous
 
 Health insurance and access to healthcare are pivotal elements in the equation. Disparities in insurance coverage often lead to barriers in accessing medical services, resulting in divergent health outcomes. Our study aims to decipher the link between insurance status, healthcare accessibility, and resulting health disparities.
 
-**Project Overview:**
+### **Project Overview:**
 
 In this context, we turn to the National Health and Nutrition Examination Survey (NHANES) for comprehensive insights. NHANES, conducted by the Centers for Disease Control and Prevention (CDC), is an invaluable repository of health and nutrition data collected from individuals across the United States. This treasure trove of data encompasses NHANES Questionnaire Data, which probes into health behaviors, mental health, and access to healthcare, as well as NHANES Demographic Data, providing information on age, gender, race, income, and education. These datasets serve as the pillars upon which this project is built, enabling us to undertake a profound exploration of health disparities and inequities.
 
-**Objectives:**
+### **Objectives:**
 
 At the heart of this project is the aim to dissect and demystify health disparities. By analyzing NHANES data, we seek to unearth the intricate relationship between the social determinants of health, including income and education, and access to healthcare. We endeavor to unveil the stark differences in health outcomes across demographic groups and understand the nuances of these disparities. Furthermore, this analysis provides the foundation for developing targeted interventions to address these inequities and advance health equity.
 
-**Significance:**
+### **Significance:**
 
 The findings and insights arising from this exploration carry significant implications. They inform public health policies, guide healthcare providers, and empower advocacy groups. By addressing health disparities and driving toward health equity, this project not only holds the potential to revolutionize healthcare delivery systems but also to create a world where access to healthcare is a fundamental right, not a privilege, and where the boundaries of health disparities are steadily dismantled.
 

@@ -7,7 +7,7 @@
 
 In the pursuit of equitable health outcomes, persistent challenges arise in addressing health disparities among diverse demographic groups. Rooted in social determinants of health, these disparities reveal the intricate connections between factors like income, education, and housing. This project leverages the NHANES dataset to dissect the complex interplay of these determinants and illuminate the stark differences in health outcomes. Our goal is to not only understand these disparities but to pave the way for targeted interventions that advance health equity.
 
-<center><img src='https://github.com/kkrusere/NHANES-EDA-on-Health-Disparities-and-Inequities/blob/main/assets/nhanes_health_disparities.png?raw=true' width=600/></center>
+<center><img src='https://github.com/kkrusere/NHANES-EDA-on-Health-Disparities/blob/main/assets/nhanes_eda.png?raw=true' width=600/></center>
 
 ### **Objectives:**
 
